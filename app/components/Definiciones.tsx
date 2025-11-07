@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 
 interface Definicion {
   id: string;
@@ -194,6 +195,18 @@ interface DefinicionesProps {
 
 export default function Definiciones({ terminoActivo }: DefinicionesProps) {
   const definicionActiva = definiciones.find(def => def.id === terminoActivo);
+  const caracteristicasRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (terminoActivo && caracteristicasRef.current) {
+      setTimeout(() => {
+        caracteristicasRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 600);
+    }
+  }, [terminoActivo]);
 
   return (
     <AnimatePresence>
@@ -225,6 +238,7 @@ export default function Definiciones({ terminoActivo }: DefinicionesProps) {
 
           <div className="grid md:grid-cols-2 gap-8">
             <motion.div
+              ref={caracteristicasRef}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
